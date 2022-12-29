@@ -14,7 +14,8 @@ class GenreController extends Controller
      */
     public function index()
     {
-        //
+        $list = Genre::all();
+        return view('admincp.genre.index', compact('list'));
     }
 
     /**
@@ -37,13 +38,21 @@ class GenreController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
+        $genre_check=Genre::where('slug',$data['slug'])->count();
+        if($genre_check>0){
+        flash()->addWarning('Tên thể loại đã bị trùng, vui lòng cập nhật lại');
+        return redirect()->back();
+        }else{
         $genre = new Genre();
         $genre->title = $data['title'];
         $genre->slug = $data['slug'];
         $genre->description = $data['description'];
         $genre->status = $data['status'];
         $genre->save();
-        return redirect()->back();
+        flash()->addSuccess('Thêm thể loại thành công');
+
+        return redirect()->route('genre.index');
+        }
     }
 
     /**
@@ -80,13 +89,16 @@ class GenreController extends Controller
     public function update(Request $request, $id)
     {
         $data = $request->all();
+
         $genre = Genre::find($id);
         $genre->title = $data['title'];
         $genre->slug = $data['slug'];
         $genre->description = $data['description'];
         $genre->status = $data['status'];
         $genre->save();
-        return redirect()->back();
+        flash()->addSuccess('Cập nhật thể loại thành công');
+        return redirect()->route('genre.index');
+        
     }
 
     /**
@@ -98,6 +110,7 @@ class GenreController extends Controller
     public function destroy($id)
     {
         Genre::find($id)->delete();
+        flash()->addSuccess('Xoá thể loại thành công');
         return redirect()->back();
     }
 }

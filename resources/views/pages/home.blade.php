@@ -89,7 +89,9 @@
                                 CAM
                                 @elseif($mov->resolution==3)
                                 Trailer
-                                @endif</span><span class="episode"><i class="fa fa-play" aria-hidden="true"></i>@if($mov->sub==0)
+                                @endif</span>
+                                <span class="episode"><i class="fa fa-play" aria-hidden="true"></i>
+                                @if($mov->sub==0)
                                 Vietsub
                                 @elseif($mov->sub==1)
                                 Thuyết minh
@@ -119,15 +121,24 @@
                     <span>Phim mới</span>
                 </div>
                 @foreach($phim_moi as $key =>$moi)
-                <div id="halim-ajax-popular-post" class="popular-post">
-                    <div class="item post-37176">
+                <div id="halim-ajax-popular-post" class="popular-post" >
+                    <div class="item post-37176" style="height: 130px">
                         <a href="{{route('movie',$moi->slug)}}" title="">
                             <div class="item-link">
-                                <img src="{{asset('uploads/movie/'.$moi->image)}}" class="lazy post-thumb" alt="CHỊ MƯỜI BA: BA NGÀY SINH TỬ" title="CHỊ MƯỜI BA: BA NGÀY SINH TỬ" />
+                                <img style="margin-left: 8px;" src="{{asset('uploads/movie/'.$moi->image)}}" class="lazy post-thumb" alt="CHỊ MƯỜI BA: BA NGÀY SINH TỬ" title="CHỊ MƯỜI BA: BA NGÀY SINH TỬ" />
                             </div>
                             <p class="title">{{$moi->title}}</p>
                         </a>
-                        <div class="viewsCount" style="color: #9d9d9d;">Hot......</div>
+                        <div class="viewsCount" style="color: #9d9d9d;">Chất lượng : @if($mov->resolution==0)
+                                HD
+                                @elseif($mov->resolution==1)
+                                FullHD
+                                @elseif($mov->resolution==2)
+                                CAM
+                                @elseif($mov->resolution==3)
+                                Trailer
+                                @endif</div>
+                        <div class="viewsCount" style="color: #9d9d9d;">Lượt xem : {{$moi->count_views}}</div>
                         <div style="float: left;">
                             <span class="user-rate-image post-large-rate stars-large-vang" style="display: block;/* width: 100%; */">
                                 <span style="width: 0%"></span>
@@ -150,14 +161,15 @@
                 </div>
                 @foreach($phim_trailer as $key =>$tra)
                 <div id="halim-ajax-popular-post" class="popular-post">
-                    <div class="item post-37176">
+                    <div class="item post-37176"  style="height: 130px">
                         <a href="{{route('movie',$moi->slug)}}" title="">
                             <div class="item-link">
-                                <img src="{{asset('uploads/movie/'.$tra->image)}}" class="lazy post-thumb" alt="CHỊ MƯỜI BA: BA NGÀY SINH TỬ" title="CHỊ MƯỜI BA: BA NGÀY SINH TỬ" />
+                                <img style="margin-left: 8px;" src="{{asset('uploads/movie/'.$tra->image)}}" class="lazy post-thumb" alt="CHỊ MƯỜI BA: BA NGÀY SINH TỬ" title="CHỊ MƯỜI BA: BA NGÀY SINH TỬ" />
                             </div>
                             <p class="title">{{$tra->title}}</p>
                         </a>
                         <div class="viewsCount" style="color: #9d9d9d;">New......</div>
+                        <div class="viewsCount" style="color: #9d9d9d;">Năm phát hành : {{$tra->year}}</div>
                         <div style="float: left;">
                             <span class="user-rate-image post-large-rate stars-large-vang" style="display: block;/* width: 100%; */">
                                 <span style="width: 0%"></span>

@@ -8,6 +8,7 @@ use App\Models\Country;
 use App\Models\Genre;
 use App\Models\Category;
 use App\Models\Movie_Genre;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 
@@ -23,7 +24,7 @@ class MovieController extends Controller
      */
     public function index()
     {
-        $list = Movie::with('category', 'movie_genre', 'country', 'genre')->orderBy('id', 'DESC')->get();
+        $list = Movie::with('category', 'movie_genre', 'country', 'genre')->withCount('episode')->orderBy('id', 'DESC')->get();
         $destinationPath = public_path() . "/json_file/";
         if (!is_dir($destinationPath)) {
             mkdir($destinationPath, 0777, true);
@@ -71,6 +72,11 @@ class MovieController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
+        $movie_check=Movie::where('slug',$data['slug'])->count();
+        if($movie_check>0){
+        flash()->addWarning('Phim đã bị trùng, vui lòng cập nhật lại');
+        return redirect()->back();
+        }else{
         $movie = new Movie();
         $movie->title = $data['title'];
         $movie->description = $data['description'];
@@ -85,6 +91,9 @@ class MovieController extends Controller
         $movie->slug = $data['slug'];
         $movie->category_id = $data['category_id'];
         $movie->country_id = $data['country_id'];
+        $movie->count_views = rand(100,900);
+        $movie->created_date = Carbon::now('Asia/Ho_Chi_Minh');
+        $movie->updated_date = Carbon::now('Asia/Ho_Chi_Minh');
 
         foreach ($data['genre'] as $key => $gen) {
             $movie->genre_id = $gen[0];
@@ -103,7 +112,10 @@ class MovieController extends Controller
         $movie->save();
 
         $movie->movie_genre()->attach($data['genre']);
+        flash()->addSuccess('Thêm phim thành công');
+
         return redirect()->route('movie.index');
+        }
     }
     /**
      * 
@@ -158,6 +170,10 @@ class MovieController extends Controller
         $movie->slug = $data['slug'];
         $movie->category_id = $data['category_id'];
         $movie->country_id = $data['country_id'];
+        $movie->updated_date = Carbon::now('Asia/Ho_Chi_Minh');
+
+
+
         foreach ($data['genre'] as $key => $gen) {
             $movie->genre_id = $gen[0];
         }
@@ -178,7 +194,7 @@ class MovieController extends Controller
         }
         $movie->save();
         $movie->movie_genre()->sync($data['genre']);
-
+        flash()->addSuccess('Cập nhật tập phim thành công');
         return redirect()->route('movie.index');
     }
 
@@ -198,6 +214,8 @@ class MovieController extends Controller
         Movie_Genre::whereIn('movie_id', [$movie->id])->delete();
 
         $movie->delete();
+        flash()->addSuccess('Xoá phim thành công');
+
         return redirect()->back();
     }
 }

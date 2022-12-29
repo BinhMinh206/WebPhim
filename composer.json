@@ -11,7 +11,10 @@
         "laravel/framework": "^8.75",
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
-        "laravelcollective/html": "^6.3"
+        "laravelcollective/html": "^6.3",
+        "php-flasher/flasher-laravel": "^1.10",
+        "php-flasher/flasher-toastr-laravel": "^1.10",
+        "yoeunes/toastr": "^2.1"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

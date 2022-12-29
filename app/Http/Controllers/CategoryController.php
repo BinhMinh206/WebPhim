@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Category;
-
+use Flasher\Prime\FlasherInterface;
 class CategoryController extends Controller
 {
     /**
@@ -14,7 +14,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        $list = Category::all();
+        return view('admincp.category.index', compact('list'));
     }
 
     /**
@@ -24,8 +25,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        $list = Category::all();
-        return view('admincp.category.form', compact('list'));
+        return view('admincp.category.form');
     }
 
     /**
@@ -36,14 +36,24 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
+        
         $data = $request->all();
+        $category_check=Category::where('slug',$data['slug'])->count();
+        if($category_check>0){
+        flash()->addWarning('Danh mục đã bị trùng, vui lòng thêm danh mục khác');
+        return redirect()->back();
+
+        }else{
         $category = new Category();
-        $category->title = $data['title'];
+        $category->title = $data['title'];  
         $category->slug = $data['slug'];
         $category->description = $data['description'];
         $category->status = $data['status'];
         $category->save();
-        return redirect()->back();
+        }
+        // toastr()->success('Thành công','Thêm danh mục thành công');
+        flash()->addSuccess('Thêm danh mục thành công');
+        return redirect()->route('category.index');
     }
 
     /**
@@ -86,7 +96,9 @@ class CategoryController extends Controller
         $category->description = $data['description'];
         $category->status = $data['status'];
         $category->save();
-        return redirect()->back();
+        
+        flash()->addSuccess('Cập nhật danh mục thành công');
+        return redirect()->route('category.index');
     }
 
     /**
@@ -98,6 +110,7 @@ class CategoryController extends Controller
     public function destroy($id)
     {
         Category::find($id)->delete();
+        flash()->addSuccess('Xoá danh mục thành công');
         return redirect()->back();
     }
 }

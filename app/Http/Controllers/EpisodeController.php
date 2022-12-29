@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Movie;
 use App\Models\Episode;
+use Carbon\Carbon;
+
 
 class EpisodeController extends Controller
 {
@@ -15,7 +17,7 @@ class EpisodeController extends Controller
      */
     public function index()
     {
-        $list_ep = Episode::with('movie')->orderBy('movie_id', 'DESC')->get();
+        $list_ep = Episode::with('movie')->orderBy('episode', 'DESC')->get();
         return view('admincp.episode.index', compact('list_ep'));
     }
 
@@ -33,7 +35,12 @@ class EpisodeController extends Controller
         return view('admincp.episode.form', compact('list_movie'));
     }
 
-
+    public function add_episode($id)
+    {
+        $list_ep = Episode::with('movie')->where('movie_id',$id)->orderBy('episode', 'DESC')->get();
+        $movie=Movie::find($id);
+        return view('admincp.episode.add_episode', compact('list_ep','movie'));
+    }
     /**
      * Store a newly created resource in storage.
      *
@@ -43,13 +50,22 @@ class EpisodeController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
-        $ep = new Episode();
-        $ep->movie_id = $data['movie_id'];
-        $ep->episode = $data['episode'];
-        $ep->link = $data['link'];
+        $episode_check=Episode::where('episode',$data['episode'])->where('movie_id',$data['movie_id'])->count();
+        if($episode_check>0){
+        flash()->addWarning('Tập phim đã bị trùng, vui lòng thêm tập phim khác');
+        return redirect()->back();
 
-        $ep->save();
-        return redirect()->route('movie.index');
+        }else{
+            $ep = new Episode();
+            $ep->movie_id = $data['movie_id'];
+            $ep->episode = $data['episode'];
+            $ep->link = $data['link'];
+            $ep->created_date = Carbon::now('Asia/Ho_Chi_Minh');
+            $ep->updated_date = Carbon::now('Asia/Ho_Chi_Minh');
+            flash()->addSuccess('Thêm tập phim thành công');
+            $ep->save();
+        }
+        return redirect()->back();
     }
 
     /**
@@ -91,6 +107,7 @@ class EpisodeController extends Controller
         //$ep->episode = $data['episode'];
         $ep->link = $data['link'];
         $ep->save();
+        flash()->addSuccess('Cập nhật tập phim thành công');
         return redirect()->back();
     }
 
@@ -103,6 +120,7 @@ class EpisodeController extends Controller
     public function destroy($id)
     {
         $episode = Episode::find($id)->delete();
+        flash()->addSuccess('Xoá tập phim thành công');
         return redirect()->to('episode');
     }
 
@@ -121,9 +139,6 @@ class EpisodeController extends Controller
 
             $output .= '<option value="' . $i + 1 . '">' . $i + 1 . '</option>';
         }
-
-
-
         echo $output;
     }
 }

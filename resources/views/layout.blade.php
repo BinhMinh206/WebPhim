@@ -13,6 +13,7 @@
 
     <link rel="shortcut icon" href="https://www.pngkey.com/png/detail/360-3601772_your-logo-here-your-company-logo-here-png.png" type="image/x-icon" />
     <meta name="revisit-after" content="1 days" />
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
     <meta name='robots' content='index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' />
     <title>Web phim</title>
     <meta name="description" content="Phim hay 2021 - Xem phim hay nhất, xem phim online miễn phí, phim hot , phim nhanh" />
@@ -177,11 +178,14 @@
     <footer id="footer" class="clearfix">
         <div class="container footer-columns">
             <div class="row container">
-                <div class="widget about col-xs-12 col-sm-4 col-md-4">
+                <div class="widget about col-xs-12 col-sm-6 col-md-6">
                     <div class="footer-logo">
-                        <img class="img-responsive" src="https://img.favpng.com/9/23/19/movie-logo-png-favpng-nRr1DmYq3SNYSLN8571CHQTEG.jpg" alt="Phim hay 2021- Xem phim hay nhất" />
+                       Đồ án tốt nghiệp <br>
+                       Sinh viên thực hiện : Phạm Bình Minh <br>
+                       Lớp : 63IT3 <br> MSSV: 142463 <br>
+                       Giảng viên hướng dẫn : Nguyễn Hải Dương
                     </div>
-                    Liên hệ QC: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="e5958d8c888d849ccb868aa58288848c89cb868a88">[email&#160;protected]</a>
+                    Liên hệ QC: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="e5958d8c888d849ccb868aa58288848c89cb868a88">phbinhminh206@gmail.com</a>
                 </div>
             </div>
         </div>
@@ -191,7 +195,79 @@
     <script type='text/javascript' src='{{asset('js/bootstrap.min.js?ver=5.7.2')}}' id='bootstrap-js'></script>
     <script type='text/javascript' src='{{asset('js/owl.carousel.min.js?ver=5.7.2')}}' id='carousel-js'></script>
     <script type='text/javascript' src='{{asset('js/halimtheme-core.min.js?ver=1626273138')}}' id='halim-init-js'></script>
+    <script type="text/javascript">
+        
+        function remove_background(movie_id)
+         {
+          for(var count = 1; count <= 5; count++)
+          {
+           $('#'+movie_id+'-'+count).css('color', '#ccc');
+          }
+        }
 
+        //hover chuột đánh giá sao
+       $(document).on('mouseenter', '.rating', function(){
+          var index = $(this).data("index");
+          var movie_id = $(this).data('movie_id');
+        // alert(index);
+        // alert(movie_id);
+          remove_background(movie_id);
+          for(var count = 1; count<=index; count++)
+          {
+           $('#'+movie_id+'-'+count).css('color', '#ffcc00');
+          }
+        });
+       //nhả chuột ko đánh giá
+       $(document).on('mouseleave', '.rating', function(){
+          var index = $(this).data("index");
+          var movie_id = $(this).data('movie_id');
+          var rating = $(this).data("rating");
+          remove_background(movie_id);
+          //alert(rating);
+          for(var count = 1; count<=rating; count++)
+          {
+           $('#'+movie_id+'-'+count).css('color', '#ffcc00');
+          }
+         });
+
+        //click đánh giá sao
+        $(document).on('click', '.rating', function(){
+           
+              var index = $(this).data("index");
+              var movie_id = $(this).data('movie_id');
+          
+              $.ajax({
+               url:"{{route('add-rating')}}",
+               method:"POST",
+               data:{index:index, movie_id:movie_id},
+                 headers: {
+                  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+               success:function(data)
+               {
+                if(data == 'done')
+                {
+                 
+                 alert("Bạn đã đánh giá "+index +" trên 5");
+                 location.reload();
+                 
+                }else if(data =='exist'){
+                  alert("Bạn đã đánh giá phim này rồi,cảm ơn bạn nhé");
+                }
+                else
+                {
+                 alert("Lỗi đánh giá");
+                }
+                
+               }
+              });
+            
+            
+              
+        });
+
+   
+    </script>                            
     <script>
         $('.filter-sidebar').click(function() {
             var href = $(this).attr('href');

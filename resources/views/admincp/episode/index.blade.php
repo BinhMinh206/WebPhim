@@ -4,12 +4,12 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
-            <table class="table table-bordered table-hover">
+            <table class="table table-bordered table-hover" id="tablephim">
                 <thead class="thead-dark">
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Title Movie</th>
-                        <th scope="col">Poster Movie</th>
+                        <th scope="col">Poster</th>
                         <th scope="col">Episode</th>
                         <th scope="col">Link</th>
                         <th scope="col">Manage</th>
