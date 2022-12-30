@@ -141,7 +141,7 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 
     <script src="https:////cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
-
+    @if(Auth::check())
     <div class="main-content">
         <div class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left" id="cbp-spmenu-s1">
             <!--left-fixed -navigation-->
@@ -169,7 +169,10 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
                                     <i class="fa fa-dashboard"></i> <span>Dashboard</span>
                                 </a>
                             </li>
-                            <li class="treeview">
+                            @php
+                            $segment=Request::segment(1)
+                            @endphp
+                            <li class="treeview {{($segment=='category')? 'active' : ''}}">
                                 <a href="#">
                                     <i class="fa fa-database"></i>
                                     <span>Danh mục phim</span>
@@ -186,7 +189,7 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
                                     </li>
                                 </ul>
                             </li>
-                            <li class="treeview">
+                            <li class="treeview {{($segment=='genre')? 'active' : ''}}">
                                 <a href="#">
                                     <i class="fa fa-laptop"></i>
                                     <span>Thể loại phim</span>
@@ -203,7 +206,7 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
                                     </li>
                                 </ul>
                             </li>
-                            <li class="treeview">
+                            <li class="treeview {{($segment=='country')? 'active' : ''}}">
                                 <a href="#">
                                     <i class="fa fa-globe"></i>
                                     <span>Quốc gia sản xuất</span>
@@ -220,7 +223,7 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
                                     </li>
                                 </ul>
                             </li>
-                            <li class="treeview">
+                            <li class="treeview {{($segment=='movie')? 'active' : ''}}">
                                 <a href="#">
                                     <i class="fa fa-video-camera"></i>
                                     <span>Phim</span>
@@ -237,7 +240,7 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
                                     </li>
                                 </ul>
                             </li>
-                            <li class="treeview">
+                            <li class="treeview {{($segment=='episode')? 'active' : ''}}">
                                 <a href="#">
                                     <i class="fa fa-film"></i>
                                     <span>Tập phim</span>
@@ -274,48 +277,33 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
             <div class="header-right">
                 <!--search-box-->
                 <div class="search-box">
-                    <form class="input">
-                        <input class="sb-search-input input__field--madoka" placeholder="Search..." type="search"
-                            id="input-31" />
-                        <label class="input__label" for="input-31">
-                            <svg class="graphic" width="100%" height="100%" viewBox="0 0 404 77"
-                                preserveAspectRatio="none">
-                                <path d="m0,0l404,0l0,77l-404,0l0,-77z" />
-                            </svg>
-                        </label>
-                    </form>
+                    
                 </div>
                 <!--//end-search-box-->
                 <div class="profile_details">
                     <ul>
                         <li class="dropdown profile_details_drop">
+                        <ul class="dropdown-menu drp-mnu">
+                                <li>
+                                    <form action="{{route('logout')}}" method="POST">
+                                        @csrf
+                                    <i class="fa fa-sign-out"></i> <input type="submit" class="btn btn-danger btn-sm" value="Logout">
+                                    </form>
+                                </li>
+                            </ul>
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                                 <div class="profile_img">
                                     <span class="prfil-img"><img src="images/2.jpg" alt="" />
                                     </span>
                                     <div class="user-name">
-                                        <p>Admin Name</p>
-                                        <span>Administrator</span>
+                                        <p>Bình Minh</p>
                                     </div>
                                     <i class="fa fa-angle-down lnr"></i>
                                     <i class="fa fa-angle-up lnr"></i>
                                     <div class="clearfix"></div>
                                 </div>
                             </a>
-                            <ul class="dropdown-menu drp-mnu">
-                                <li>
-                                    <a href="#"><i class="fa fa-cog"></i> Settings</a>
-                                </li>
-                                <li>
-                                    <a href="#"><i class="fa fa-user"></i> My Account</a>
-                                </li>
-                                <li>
-                                    <a href="#"><i class="fa fa-suitcase"></i> Profile</a>
-                                </li>
-                                <li>
-                                    <a href="#"><i class="fa fa-sign-out"></i> Logout</a>
-                                </li>
-                            </ul>
+                          
                         </li>
                     </ul>
                 </div>
@@ -330,10 +318,10 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
                 <div class="col_3">
                     <div class="col-md-3 widget widget1">
                         <div class="r3_counter_box">
-                            <i class="pull-left fa fa-dollar icon-rounded"></i>
+                            <i class="pull-left fa fa-database icon-rounded"></i>
                             <div class="stats">
-                                <h5><strong>$452</strong></h5>
-                                <span>Total Revenue</span>
+                                <h5><strong>{{$tcategory}}</strong></h5>
+                                <span>Danh mục phim</span>
                             </div>
                         </div>
                     </div>
@@ -341,35 +329,35 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
                         <div class="r3_counter_box">
                             <i class="pull-left fa fa-laptop user1 icon-rounded"></i>
                             <div class="stats">
-                                <h5><strong>$1019</strong></h5>
-                                <span>Online Revenue</span>
+                                <h5><strong>{{$tgenre}}</strong></h5>
+                                <span>Thể loại</span>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-3 widget widget1">
                         <div class="r3_counter_box">
-                            <i class="pull-left fa fa-money user2 icon-rounded"></i>
+                            <i class="pull-left fa fa-globe user2 icon-rounded"></i>
                             <div class="stats">
-                                <h5><strong>$1012</strong></h5>
-                                <span>Expenses</span>
+                                <h5><strong>{{$tcountry}}</strong></h5>
+                                <span>Quốc gia xuất xứ</span>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-3 widget widget1">
                         <div class="r3_counter_box">
-                            <i class="pull-left fa fa-pie-chart dollar1 icon-rounded"></i>
+                            <i class="pull-left fa fa-video-camera dollar1 icon-rounded"></i>
                             <div class="stats">
-                                <h5><strong>$450</strong></h5>
-                                <span>Expenditure</span>
+                                <h5><strong>{{$tmovie}}</strong></h5>
+                                <span>Phim</span>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-3 widget">
                         <div class="r3_counter_box">
-                            <i class="pull-left fa fa-users dollar2 icon-rounded"></i>
+                            <i class="pull-left fa fa-film dollar2 icon-rounded"></i>
                             <div class="stats">
-                                <h5><strong>1450</strong></h5>
-                                <span>Total Users</span>
+                                <h5><strong>{{$tview}}</strong></h5>
+                                <span>Lượt xem</span>
                             </div>
                         </div>
                     </div>
@@ -404,6 +392,77 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
         </div>
         <!--//footer-->
     </div>
+    @else
+    <div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">{{ __('Login') }}</div>
+
+                <div class="card-body">
+                    <form method="POST" action="{{ route('login') }}">
+                        @csrf
+
+                        <div class="form-group row">
+                            <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+
+                                @error('email')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
+
+                                @error('password')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-6 offset-md-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
+
+                                    <label class="form-check-label" for="remember">
+                                        {{ __('Remember Me') }}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row mb-0">
+                            <div class="col-md-8 offset-md-4">
+                                <button type="submit" class="btn btn-primary">
+                                    {{ __('Login') }}
+                                </button>
+
+                                @if (Route::has('password.request'))
+                                    <a class="btn btn-link" href="{{ route('password.request') }}">
+                                        {{ __('Forgot Your Password?') }}
+                                    </a>
+                                @endif
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    @endif
     <!-- new added graphs chart js-->
     <script src="{{asset('backend/js/Chart.bundle.js')}}"></script>
     <script src="{{asset('backend/js/utils.js')}}"></script>
